@@ -1,1 +1,1 @@
-soulteary/docker-gitbook-pdf-generator:1.0.0
+rafaelescrich/docker-gitbook-pdf-generator:1.0.0

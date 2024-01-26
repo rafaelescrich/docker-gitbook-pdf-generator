@@ -1,62 +1,62 @@
 # Docker Gitbook PDF Generator
 
-> 如果你想使用 GitBook 生成 PDF ，又不想折腾，使用这个项目就对啦！
+> If you want to generate PDFs using GitBook without the hassle, this project is just right for you!
 
-众所周知 GitBook 新版本调用 `calibre` 生成的 PDF 尺寸比较大，而且不支持 PDF 压缩，非常不利于传播。
+As is well-known, the new version of GitBook uses `calibre` to generate PDFs, which are quite large in size and do not support PDF compression, making them inconvenient for distribution.
 
-经过简单的寻找，我看到 **fuergaosi233** 同学用 Python 基于 `weastprint` 编写了一个简单的 GitBook PDF [生成工具](https://github.com/fuergaosi233/gitbook2pdf)，使用下来发觉还不错，于是就封装了这个镜像，希望能够帮助到有同样需求的你。
+After a brief search, I found that **fuergaosi233**, a fellow student, wrote a simple GitBook PDF [generator tool](https://github.com/rafaelescrich/gitbook2pdf) in Python based on `weastprint`. I found it quite good, so I encapsulated this image, hoping it would help others with the same needs.
 
-## 使用方法
+## How to Use
 
-如果你生成的电子书包含中文，那么在使用之前，你需要准备至少一个字体文件，比如 `苹方`、`思源`等，将文件保存在你当前目录的 **fonts** 文件夹内。
+If the ebook you're generating contains Chinese, you need to prepare at least one font file before use, such as `PingFang` or `Source Han Sans`. Save the file in the **fonts** folder in your current directory.
 
-然后直接使用 DockerHub 官方自动构建的容器镜像，配合文件挂载参数使用即可。
+Then simply use the container image automatically built by DockerHub, along with the file mount parameters.
 
-比如我们要将 `http://self-publishing.ebookchain.org` 的内容生成为电子书，只需要执行下面的命令：
+For example, to turn the content of `http://self-publishing.ebookchain.org` into an ebook, just execute the following command:
 
 ```bash
 docker run --rm -v `pwd`/fonts:/usr/share/fonts \
                 -v `pwd`/output:/app/output \
-                soulteary/docker-gitbook-pdf-generator:1.0.0 "http://self-publishing.ebookchain.org"
+                rafaelescrich/docker-gitbook-pdf-generator:1.0.0 "http://self-publishing.ebookchain.org"
 ```
 
-如果你是 Windows 用户，使用 Powershell，可以使用下面的命令：
+If you are a Windows user and use Powershell, you can use the following command:
 
 ```powershell
 docker run --rm -v $PWD/fonts:/usr/share/fonts \
                 -v $PWD/output:/app/output \
-                soulteary/docker-gitbook-pdf-generator:1.0.0 "http://self-publishing.ebookchain.org"
+                rafaelescrich/docker-gitbook-pdf-generator:1.0.0 "http://self-publishing.ebookchain.org"
 ```
 
-稍等片刻，你将会看到下面的内容：
+After a short wait, you will see the following:
 
 ```text
 crawl : all done!
-Generating pdf,please wait patiently
+Generating pdf, please wait patiently
 Generated
 ```
 
-这时，你当前目录会自动多出一个名为 `output` 的新目录，而电子书就会安静的躺在里面啦。
+At this time, a new directory named `output` will automatically appear in your current directory, and the ebook will quietly lie inside.
 
-如果你觉得上面这条命令太过复杂，也可以使用仓库中的 `docker-compose.yml` 模版来进行电子书生成操作，如果你不太会使用，可以围观我博客中 `docker` 相关的使用教程，通常阅读时间都在十分钟左右， Good Luck。
+If you find the above command too complex, you can also use the `docker-compose.yml` template in the repository to generate the ebook. If you're not familiar with how to use it, you can check out the `docker` tutorials in my blog, which usually take about ten minutes to read. Good Luck.
 
-## 其他
+## Other
 
-如果你对样式有更高的要求，可以使用文件挂载的方式修改 `/app/gitbook.css` 的样式。
+If you have higher requirements for style, you can modify the style of `/app/gitbook.css` using file mounts.
 
-如果你想了解更多细节，可以阅读 [这篇博客](https://soulteary.com/2019/05/07/generate-small-gitbook-pdf-using-the-docker-with-python.html)。
+If you want to know more details, you can read [this blog](https://soulteary.com/2019/05/07/generate-small-gitbook-pdf-using-the-docker-with-python.html).
 
-## 常见问题
+## Common Issues
 
-- 运行报错
-    - 报错提示 “/usr/local/lib/python3.7/site-packages/weasyprint/fonts.py:230: UserWarning: FontConfig: No fonts configured. Expect ugly output. 'FontConfig: No fonts configured. ”
-    - 报错原因 字体挂载位置不正确，请参考最新文档中的命令。感谢 ISSUE 里诸位网友反馈。
-- Windows 环境命令报错
-    - 报错提示 “Error response from daemon: create pwd/fonts: "pwd/fonts" includes invalid characters for a local volume name, only "[a-zA-Z0-9][a-zA-Z0-9_.-]" are allowed. If you intended to pass a host directory, use absolute path.”
-    - 报错原因 windows 不支持 bash 标准语法，使用
-- 生成 PDF 中文显示不正确，显示为“口口”
-    - 解决方法：下载或者拷贝系统字体到你要挂载的目录，再次执行程序
+- Error during run
+    - Error message: “/usr/local/lib/python3.7/site-packages/weasyprint/fonts.py:230: UserWarning: FontConfig: No fonts configured. Expect ugly output. 'FontConfig: No fonts configured. ”
+    - Cause of error: Incorrect font mount location, please refer to the latest document for commands. Thanks to the feedback from netizens in the ISSUE.
+- Command error in Windows environment
+    - Error message: “Error response from daemon: create pwd/fonts: "pwd/fonts" includes invalid characters for a local volume name, only "[a-zA-Z0-9][a-zA-Z0-9_.-]" are allowed. If you intended to pass a host directory, use absolute path.”
+    - Cause of error: Windows does not support bash standard syntax, use
+- Incorrect Chinese display in generated PDF, displayed as “口口”
+    - Solution: Download or copy system fonts to the directory you want to mount, then run the program again.
 
-## 协议
+## License
 
 MIT, For Everyone.
